@@ -1,4 +1,4 @@
-import { AlertTriangle, Download, FileDown, FolderDown, Monitor, Moon, RotateCw, ShieldAlert, ShieldCheck, SlidersHorizontal, Sun } from "lucide-react";
+import { AlertTriangle, Download, FileDown, FolderDown, Monitor, Moon, RefreshCw, RotateCw, ShieldAlert, ShieldCheck, SlidersHorizontal, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { AppInfo, AppStatusMap, HubLogEvent, UpdateCheckResult } from "../../../shared";
 import { Badge } from "@/components/badge";
@@ -63,6 +63,8 @@ export function SettingsPage({
   useEffect(() => {
     void window.miniHub.getDownloadsFolder().then(setDownloadsFolder);
     void window.miniHub.getPortableMode().then(setPortableMode);
+    const unsubscribeUpdate = window.miniHub.onUpdateState(setUpdateCheck);
+    return () => unsubscribeUpdate();
   }, []);
 
   const exportDiagnostics = async () => {
@@ -204,7 +206,7 @@ export function SettingsPage({
               </div>
               <div className="rounded-md border border-white/10 bg-white/[0.035] p-3">
                 <div className="text-xs uppercase tracking-[0.14em] text-muted-foreground">Changelog</div>
-                <div className="mt-1 text-xs leading-5 text-muted-foreground">0.1.0: setup hub, scan, installer queue, sources, diagnostics, profiles.</div>
+                <div className="mt-1 text-xs leading-5 text-muted-foreground">0.2.0: auto-update, tweak audit, Pro mode, expanded Windows tweaks.</div>
               </div>
             </div>
             <div className="mb-4 rounded-md border border-white/10 bg-white/[0.035] p-3">
@@ -254,14 +256,41 @@ export function SettingsPage({
                 size="sm"
                 variant="secondary"
                 onClick={async () => setUpdateCheck(await window.miniHub.checkForUpdates())}
+                disabled={updateCheck?.status === "checking" || updateCheck?.status === "downloading"}
               >
-                <Download className="h-4 w-4" />
-                Check Mini Hub update
+                {updateCheck?.status === "checking" || updateCheck?.status === "downloading" ? (
+                  <RefreshCw className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Download className="h-4 w-4" />
+                )}
+                Check and download update
+              </Button>
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() => void window.miniHub.installUpdate()}
+                disabled={!updateCheck?.updateReadyToInstall}
+              >
+                <RotateCw className="h-4 w-4" />
+                Restart and install
               </Button>
             </div>
             {updateCheck && (
               <div className="mt-3 rounded-md border border-white/10 bg-white/[0.035] p-3 text-sm text-muted-foreground">
-                {updateCheck.message}
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span>{updateCheck.message}</span>
+                  <Badge tone={updateCheck.updateReadyToInstall ? "success" : updateCheck.updateAvailable ? "warning" : "muted"}>
+                    {updateCheck.status ?? "idle"}
+                  </Badge>
+                </div>
+                {typeof updateCheck.downloadPercent === "number" && (
+                  <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/[0.08]">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-cyan-300 to-violet-400 transition-all"
+                      style={{ width: `${Math.min(100, Math.max(0, updateCheck.downloadPercent))}%` }}
+                    />
+                  </div>
+                )}
               </div>
             )}
           </CardContent>

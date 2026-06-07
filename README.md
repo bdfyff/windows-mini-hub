@@ -15,7 +15,7 @@
     <img alt="Download latest release" src="https://img.shields.io/badge/Download-latest%20.exe-38bdf8?style=for-the-badge&logo=github&logoColor=white" />
   </a>
   <img alt="Windows" src="https://img.shields.io/badge/Windows-10%20%2F%2011-0078d4?style=for-the-badge&logo=windows11&logoColor=white" />
-  <img alt="Version" src="https://img.shields.io/badge/version-0.1.1-8b5cf6?style=for-the-badge" />
+  <img alt="Version" src="https://img.shields.io/badge/version-0.2.0-8b5cf6?style=for-the-badge" />
 </p>
 
 ---
@@ -29,13 +29,13 @@ Download the latest `.exe` from:
 Recommended file:
 
 ```text
-Windows Mini Hub-Setup-0.1.1-x64.exe
+Windows Mini Hub-Setup-0.2.0-x64.exe
 ```
 
 Portable build is also available if you prefer running the app without installation:
 
 ```text
-Windows Mini Hub-Portable-0.1.1-x64.exe
+Windows Mini Hub-Portable-0.2.0-x64.exe
 ```
 
 ## What It Does

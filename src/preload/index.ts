@@ -12,7 +12,8 @@ import type {
   PreflightResult,
   SourceOverride,
   SourceVerification,
-  SystemCheck
+  SystemCheck,
+  UpdateCheckResult
 } from "../shared";
 
 contextBridge.exposeInMainWorld("miniHub", {
@@ -39,7 +40,8 @@ contextBridge.exposeInMainWorld("miniHub", {
   verifySources: (ids: string[]) => ipcRenderer.invoke("hub:verify-sources", ids) as Promise<SourceVerification[]>,
   getGithubAssets: (ids: string[]) => ipcRenderer.invoke("hub:github-assets", ids) as Promise<Record<string, GithubAsset[]>>,
   getAppInfo: () => ipcRenderer.invoke("hub:app-info") as Promise<AppInfo>,
-  checkForUpdates: () => ipcRenderer.invoke("hub:check-for-updates"),
+  checkForUpdates: () => ipcRenderer.invoke("hub:check-for-updates") as Promise<UpdateCheckResult>,
+  installUpdate: () => ipcRenderer.invoke("hub:install-update"),
   exportDiagnostics: (report: DiagnosticsReport) => ipcRenderer.invoke("hub:export-diagnostics", report) as Promise<boolean>,
   getPortableMode: () => ipcRenderer.invoke("hub:portable-mode") as Promise<boolean>,
   setPortableMode: (enabled: boolean) => ipcRenderer.invoke("hub:set-portable-mode", enabled) as Promise<boolean>,
@@ -65,5 +67,10 @@ contextBridge.exposeInMainWorld("miniHub", {
     const listener = (_event: Electron.IpcRendererEvent, payload: HubDownloadProgress) => callback(payload);
     ipcRenderer.on("hub:download-progress", listener);
     return () => ipcRenderer.removeListener("hub:download-progress", listener);
+  },
+  onUpdateState: (callback: (state: UpdateCheckResult) => void) => {
+    const listener = (_event: Electron.IpcRendererEvent, payload: UpdateCheckResult) => callback(payload);
+    ipcRenderer.on("hub:update-state", listener);
+    return () => ipcRenderer.removeListener("hub:update-state", listener);
   }
 });

@@ -10,7 +10,7 @@ export default defineConfig({
       fileName: "index"
     },
     rollupOptions: {
-      external: ["electron", "node:child_process", "node:crypto", "node:fs", "node:fs/promises", "node:path", "node:url"]
+      external: ["electron", "electron-updater", "node:child_process", "node:crypto", "node:fs", "node:fs/promises", "node:path", "node:url"]
     }
   }
 });

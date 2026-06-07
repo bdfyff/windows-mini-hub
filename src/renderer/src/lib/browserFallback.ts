@@ -37,8 +37,9 @@ export function installBrowserFallback() {
     removeSourceOverride: async () => true,
     verifySources: async () => [],
     getGithubAssets: async () => ({}),
-    getAppInfo: async () => ({ name: "Windows Mini Hub", version: "0.1.0", buildDate: new Date().toISOString() }),
-    checkForUpdates: async () => ({ configured: false, currentVersion: "0.1.0", message: "Auto-update repo is not configured." }),
+    getAppInfo: async () => ({ name: "Windows Mini Hub", version: "0.2.0", buildDate: new Date().toISOString() }),
+    checkForUpdates: async () => ({ configured: false, currentVersion: "0.2.0", status: "idle", message: "Auto-update is available in packaged builds." }),
+    installUpdate: async () => false,
     exportDiagnostics: async () => false,
     getPortableMode: async () => false,
     setPortableMode: async (enabled: boolean) => enabled,
@@ -48,6 +49,7 @@ export function installBrowserFallback() {
     onLog: (_callback: (event: HubLogEvent) => void) => () => undefined,
     onStatus: (_callback: (status: HubStatus) => void) => () => undefined,
     onQueue: (_callback: (items: AppQueueItem[]) => void) => () => undefined,
-    onDownloadProgress: (_callback: (progress: HubDownloadProgress) => void) => () => undefined
+    onDownloadProgress: (_callback: (progress: HubDownloadProgress) => void) => () => undefined,
+    onUpdateState: () => () => undefined
   };
 }

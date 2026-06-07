@@ -134,6 +134,11 @@ export type UpdateCheckResult = {
   latestVersion?: string;
   releaseUrl?: string;
   updateAvailable?: boolean;
+  updateReadyToInstall?: boolean;
+  status?: "idle" | "checking" | "available" | "downloading" | "downloaded" | "not-available" | "error";
+  downloadPercent?: number;
+  downloadedBytes?: number;
+  totalBytes?: number;
   message: string;
 };
 

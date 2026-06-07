@@ -51,6 +51,7 @@ declare global {
       getGithubAssets: (ids: string[]) => Promise<Record<string, GithubAsset[]>>;
       getAppInfo: () => Promise<AppInfo>;
       checkForUpdates: () => Promise<UpdateCheckResult>;
+      installUpdate: () => Promise<boolean>;
       exportDiagnostics: (report: DiagnosticsReport) => Promise<boolean>;
       getPortableMode: () => Promise<boolean>;
       setPortableMode: (enabled: boolean) => Promise<boolean>;
@@ -61,6 +62,7 @@ declare global {
       onStatus: (callback: (status: HubStatus) => void) => () => void;
       onQueue: (callback: (items: AppQueueItem[]) => void) => () => void;
       onDownloadProgress: (callback: (progress: HubDownloadProgress) => void) => () => void;
+      onUpdateState: (callback: (state: UpdateCheckResult) => void) => () => void;
     };
   }
 }

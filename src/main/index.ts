@@ -1,8 +1,9 @@
 import { app, BrowserWindow, dialog, ipcMain } from "electron";
+import { autoUpdater } from "electron-updater";
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { AppQueueItem, DiagnosticsReport, HubDownloadProgress, HubLogEvent, HubStatus, InstallOptions } from "../shared";
+import type { AppQueueItem, DiagnosticsReport, HubDownloadProgress, HubLogEvent, HubStatus, InstallOptions, UpdateCheckResult } from "../shared";
 import {
   apps,
   cancelInstallQueue,
@@ -33,8 +34,15 @@ const __dirname = path.dirname(__filename);
 
 let mainWindow: BrowserWindow | null = null;
 let status: HubStatus = "idle";
+let autoUpdaterConfigured = false;
 const buildDate = new Date().toISOString();
 const updateRepo = process.env.WINDOWS_MINI_HUB_UPDATE_REPO ?? "bdfyff/windows-mini-hub";
+let updateState: UpdateCheckResult = {
+  configured: true,
+  currentVersion: app.getVersion(),
+  status: "idle",
+  message: "Update checker is idle."
+};
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -93,6 +101,90 @@ function emitProgress(progress: HubDownloadProgress) {
   }
 }
 
+function emitUpdateState(nextState: Partial<UpdateCheckResult>) {
+  updateState = {
+    ...updateState,
+    configured: true,
+    currentVersion: app.getVersion(),
+    ...nextState
+  };
+
+  if (mainWindow) {
+    sendToWindow(mainWindow, "hub:update-state", updateState);
+  }
+}
+
+function configureAutoUpdater() {
+  if (autoUpdaterConfigured) {
+    return;
+  }
+
+  autoUpdaterConfigured = true;
+  autoUpdater.autoDownload = true;
+  autoUpdater.autoInstallOnAppQuit = true;
+
+  autoUpdater.on("checking-for-update", () => {
+    emitUpdateState({ status: "checking", message: "Checking GitHub Releases for updates..." });
+  });
+
+  autoUpdater.on("update-available", (info) => {
+    emitUpdateState({
+      status: "available",
+      latestVersion: info.version,
+      updateAvailable: true,
+      updateReadyToInstall: false,
+      releaseUrl: `https://github.com/${updateRepo}/releases/latest`,
+      message: `Version ${info.version} is available. Downloading update...`
+    });
+    emitLog({ source: "system", level: "info", message: `Update available: ${info.version}.` });
+  });
+
+  autoUpdater.on("download-progress", (progress) => {
+    emitUpdateState({
+      status: "downloading",
+      updateAvailable: true,
+      updateReadyToInstall: false,
+      downloadPercent: Math.round(progress.percent * 10) / 10,
+      downloadedBytes: progress.transferred,
+      totalBytes: progress.total,
+      message: `Downloading update: ${Math.round(progress.percent)}%.`
+    });
+  });
+
+  autoUpdater.on("update-downloaded", (info) => {
+    emitUpdateState({
+      status: "downloaded",
+      latestVersion: info.version,
+      updateAvailable: true,
+      updateReadyToInstall: true,
+      downloadPercent: 100,
+      releaseUrl: `https://github.com/${updateRepo}/releases/latest`,
+      message: `Version ${info.version} is downloaded. Restart to install.`
+    });
+    emitLog({ source: "system", level: "success", message: `Update downloaded: ${info.version}. It will install on restart.` });
+  });
+
+  autoUpdater.on("update-not-available", (info) => {
+    emitUpdateState({
+      status: "not-available",
+      latestVersion: info.version,
+      updateAvailable: false,
+      updateReadyToInstall: false,
+      downloadPercent: undefined,
+      message: "You are on the latest release."
+    });
+  });
+
+  autoUpdater.on("error", (error) => {
+    emitUpdateState({
+      status: "error",
+      updateReadyToInstall: false,
+      message: `Update error: ${error.message}`
+    });
+    emitLog({ source: "system", level: "error", message: `Update error: ${error.message}` });
+  });
+}
+
 async function runExclusive(task: () => Promise<void>) {
   if (status === "running") {
     throw new Error("Another task is already running.");
@@ -119,6 +211,13 @@ ipcMain.handle("hub:app-info", () => ({
 }));
 
 ipcMain.handle("hub:check-for-updates", async () => {
+  if (app.isPackaged) {
+    configureAutoUpdater();
+    emitUpdateState({ status: "checking", message: "Checking GitHub Releases for updates..." });
+    await autoUpdater.checkForUpdates();
+    return updateState;
+  }
+
   if (!updateRepo || updateRepo.includes("YOUR_GITHUB_USERNAME")) {
     return {
       configured: false,
@@ -139,11 +238,21 @@ ipcMain.handle("hub:check-for-updates", async () => {
   return {
     configured: true,
     currentVersion: app.getVersion(),
+    status: updateAvailable ? "available" : "not-available",
     latestVersion,
     releaseUrl: release.html_url,
     updateAvailable,
     message: updateAvailable ? `Version ${latestVersion} is available.` : "You are on the latest configured release."
   };
+});
+
+ipcMain.handle("hub:install-update", () => {
+  if (!app.isPackaged || !updateState.updateReadyToInstall) {
+    return false;
+  }
+
+  autoUpdater.quitAndInstall(false, true);
+  return true;
 });
 
 ipcMain.handle("hub:is-admin", () => isRunningAsAdmin());
@@ -409,6 +518,15 @@ function runCommand(command: string, args: string[]) {
 
 app.whenReady().then(() => {
   createWindow();
+
+  if (app.isPackaged) {
+    configureAutoUpdater();
+    setTimeout(() => {
+      void autoUpdater.checkForUpdates().catch((error) => {
+        emitUpdateState({ status: "error", message: `Update error: ${error instanceof Error ? error.message : String(error)}` });
+      });
+    }, 5000);
+  }
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
