@@ -148,7 +148,12 @@ export type TweakDefinition = {
   id: string;
   name: string;
   description: string;
-  command: string;
+  command?: string;
   group?: "Safe" | "Balanced" | "Advanced";
   risk?: "low" | "medium" | "high";
+  category?: string;
+  requiresRestart?: boolean;
+  requiresExplorerRestart?: boolean;
+  blocked?: boolean;
+  blockedReason?: string;
 };
