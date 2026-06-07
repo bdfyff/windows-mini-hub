@@ -1,11 +1,88 @@
-# Windows Mini Hub
+<p align="center">
+  <img src="build/icon.png" width="128" alt="Windows Mini Hub icon" />
+</p>
 
-Desktop setup hub for a fresh Windows install: app selection, WinGet installs, GitHub/direct downloads, safe Windows tweaks, live logs, installed-app scan, profiles, diagnostics, and release-ready packaging.
+<h1 align="center">Windows Mini Hub</h1>
 
-## Stack
+<p align="center">
+  A modern desktop setup hub for fresh Windows installs.
+  <br />
+  Pick apps, install with WinGet, download trusted installers, apply safe tweaks, and watch everything in live logs.
+</p>
+
+<p align="center">
+  <img alt="Electron" src="https://img.shields.io/badge/Electron-42-7dd3fc?style=for-the-badge&logo=electron&logoColor=white" />
+  <img alt="React" src="https://img.shields.io/badge/React-19-61dafb?style=for-the-badge&logo=react&logoColor=0f172a" />
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178c6?style=for-the-badge&logo=typescript&logoColor=white" />
+  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind-CSS-38bdf8?style=for-the-badge&logo=tailwindcss&logoColor=white" />
+  <img alt="Windows" src="https://img.shields.io/badge/Windows-Setup%20Hub-0078d4?style=for-the-badge&logo=windows11&logoColor=white" />
+</p>
+
+---
+
+## Preview
+
+Windows Mini Hub is designed like a clean desktop dashboard: dark-first, glass UI, sidebar navigation, installer queue, floating logs, and scan-based recommendations.
+
+> Screenshots can be added here after the first GitHub release.
+
+```text
+Dashboard  -> fresh setup overview, smart recommendations, installed scan
+Apps       -> app catalog, filters, profiles, preflight, install queue
+Tweaks     -> safe Windows tweaks with confirmation
+Logs       -> terminal-style live output
+Sources    -> official/manual URL editor
+Settings   -> theme, portable mode, diagnostics, admin restart, release info
+```
+
+## Highlights
+
+- **Fresh Windows cockpit**: install the basic apps and runtimes you need after a clean Windows setup.
+- **Safe Electron architecture**: renderer has no direct Node.js access; commands run only in the main process.
+- **WinGet-first installs**: install known packages through `winget install --id <id> -e`.
+- **GitHub Releases support**: fetch latest release assets for supported apps.
+- **Direct downloads**: download official `.exe`, `.msi`, and `.zip` installers into `Downloads/Windows Mini Hub`.
+- **Live installer logs**: see task progress, errors, timestamps, and terminal-style output.
+- **Installed app scan**: detect installed apps like VLC, Chrome, Git, Steam, Discord, and more.
+- **Smart recommendations**: see what is already installed and what is missing for Fresh/Gaming/Developer setups.
+- **Profiles**: save reusable app selections like Gaming, Developer, Clean Windows, or My setup.
+- **Update mode**: run `winget upgrade` for installed apps.
+- **Safe Windows tweaks**: apply user-level tweaks like file extensions, dark mode, clipboard history, and hidden files.
+- **Diagnostics export**: export useful debug info for troubleshooting.
+- **Portable mode**: optionally store config data next to the executable.
+- **Release-ready packaging**: GitHub Actions workflow and electron-builder publish config included.
+
+## App Sources
+
+Windows Mini Hub supports several source types:
+
+| Source | Behavior |
+| --- | --- |
+| `winget` | Installs via WinGet package id |
+| `store` | Installs Microsoft Store apps via WinGet |
+| `github` | Downloads selected latest release asset |
+| `direct` | Downloads official direct URL |
+| `manual` | Requires official source before automatic install |
+
+Manual/source-required apps are never installed automatically until a trusted source is configured.
+
+## Safety Model
+
+Windows Mini Hub is intentionally built with a narrow command surface.
+
+- React UI does **not** have direct Node.js access.
+- Commands run only in Electron main process.
+- Renderer sends only allowlisted `appId` or `tweakId`.
+- Main process resolves commands and URLs from local config.
+- Manual apps require explicit official source configuration.
+- No aggressive debloat or security-disabling tweaks are included.
+
+## Tech Stack
 
 - Electron
-- React + Vite + TypeScript
+- React
+- Vite
+- TypeScript
 - Tailwind CSS
 - shadcn/ui-style local components
 - Node.js `child_process`
@@ -13,98 +90,130 @@ Desktop setup hub for a fresh Windows install: app selection, WinGet installs, G
 - PowerShell
 - electron-builder
 
-## Commands
+## Project Structure
+
+```text
+src/
+  main/
+    index.ts
+    installers.ts
+    tweaks.ts
+  preload/
+    index.ts
+  renderer/
+    src/
+      App.tsx
+      assets/
+      components/
+      pages/
+        AppsPage.tsx
+        DashboardPage.tsx
+        LogsPage.tsx
+        ManualPage.tsx
+        SettingsPage.tsx
+        TweaksPage.tsx
+      data/
+        apps.ts
+        presets.ts
+        tweaks.ts
+```
+
+## Local Development
 
 ```bash
 npm install
 npm run dev
-npm run build
-npm run pack
-npm run dist
-npm run release
 ```
 
-- `npm run dev` starts Vite and Electron.
-- `npm run build` builds renderer, main, and preload.
-- `npm run pack` builds an unpacked app into `release/`.
-- `npm run dist` builds local Windows portable/installer `.exe` artifacts.
-- `npm run release` publishes artifacts to GitHub Releases when `GH_TOKEN` is available.
+## Build Locally
 
-## GitHub Release Setup
+```bash
+npm run build
+npm run dist
+```
 
-Before publishing, replace placeholders in `package.json`:
+Build outputs are written to `release/`.
+
+Expected Windows artifacts:
+
+```text
+Windows Mini Hub-Portable-0.1.0-x64.exe
+Windows Mini Hub-Setup-0.1.0-x64.exe
+latest.yml
+```
+
+## GitHub Repository
+
+Repository:
+
+[github.com/bdfyff/windows-mini-hub](https://github.com/bdfyff/windows-mini-hub)
+
+The app is already configured for this GitHub repo:
 
 ```json
 "repository": {
   "type": "git",
-  "url": "https://github.com/YOUR_GITHUB_USERNAME/windows-mini-hub.git"
+  "url": "https://github.com/bdfyff/windows-mini-hub.git"
 },
 "publish": {
   "provider": "github",
-  "owner": "YOUR_GITHUB_USERNAME",
+  "owner": "bdfyff",
   "repo": "windows-mini-hub"
 }
 ```
 
-Replace `YOUR_GITHUB_USERNAME` with your GitHub username. If you choose a different repository name, replace `windows-mini-hub` too.
-
-Also update `src/main/index.ts` if you want local builds to check your repo for updates by default:
+The built-in update checker uses:
 
 ```ts
-const updateRepo = process.env.WINDOWS_MINI_HUB_UPDATE_REPO ?? "YOUR_GITHUB_USERNAME/windows-mini-hub";
+const updateRepo = process.env.WINDOWS_MINI_HUB_UPDATE_REPO ?? "bdfyff/windows-mini-hub";
 ```
 
-GitHub Actions already passes `WINDOWS_MINI_HUB_UPDATE_REPO` automatically as `${{ github.repository }}` for release builds.
+When GitHub Actions builds a release, it automatically passes:
 
-## Create And Push Repo
-
-1. Create a new repository on GitHub:
-   - Open https://github.com/new
-   - Repository name: `windows-mini-hub`
-   - Visibility: Public or Private
-   - Do not add README, `.gitignore`, or license on GitHub, because this project already has files.
-
-2. In this folder, run:
-
-```bash
-git init
-git add .
-git commit -m "Initial Windows Mini Hub release setup"
-git branch -M main
-git remote add origin https://github.com/YOUR_GITHUB_USERNAME/windows-mini-hub.git
-git push -u origin main
+```text
+WINDOWS_MINI_HUB_UPDATE_REPO=${{ github.repository }}
 ```
 
-3. Create a release tag:
+## Publish With GitHub Actions
 
-```bash
-git tag v0.1.0
-git push origin v0.1.0
+This repository includes:
+
+```text
+.github/workflows/release.yml
 ```
 
-GitHub Actions will run `.github/workflows/release.yml`, build on `windows-latest`, and publish the `.exe` files to GitHub Releases.
+The workflow runs on pushed tags matching `v*` and publishes the Windows `.exe` artifacts to GitHub Releases.
 
-## Manual Local Publish
-
-If you want to publish from your PC instead of GitHub Actions:
+Create a release:
 
 ```bash
+git tag v0.1.1
+git push origin v0.1.1
+```
+
+Use a new version tag for every new release. If `v0.1.0` already exists, create the next tag instead of reusing it.
+
+## Manual Publish
+
+If you want to publish from your own PC:
+
+```powershell
 $env:GH_TOKEN="YOUR_PERSONAL_ACCESS_TOKEN"
-$env:WINDOWS_MINI_HUB_UPDATE_REPO="YOUR_GITHUB_USERNAME/windows-mini-hub"
+$env:WINDOWS_MINI_HUB_UPDATE_REPO="bdfyff/windows-mini-hub"
 npm run release
 ```
 
-Usually GitHub Actions is easier because it uses `secrets.GITHUB_TOKEN` automatically.
+GitHub Actions is recommended because it uses `secrets.GITHUB_TOKEN` automatically.
 
-## What Is Included
+## Roadmap
 
-- Dashboard with stats, smart recommendations, installed app scan, and quick actions.
-- Apps page with filters, profiles, source badges, details, install summary, GitHub asset picker, and download progress.
-- Tweaks page with safe Windows tweaks and confirmation.
-- Logs page with terminal-style live output.
-- Sources page for official/manual source URLs.
-- Settings with theme, compact mode, portable mode, diagnostics export, admin restart, version/build info, and update check.
+- Real signed releases
+- Full auto-update through `electron-updater`
+- More app detection rules
+- More official app logos
+- Better GitHub asset matching
+- Optional silent install presets
 
-## Secure Electron Architecture
+## License
 
-Renderer has no direct Node.js access. The UI only calls methods exposed by `src/preload/index.ts` through `contextBridge`. Commands such as `winget`, downloads, and `powershell.exe` run only in the main process through allowlisted IPC handlers.
+Add a license before publishing publicly if you want others to reuse or modify the project.

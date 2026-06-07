@@ -34,7 +34,7 @@ const __dirname = path.dirname(__filename);
 let mainWindow: BrowserWindow | null = null;
 let status: HubStatus = "idle";
 const buildDate = new Date().toISOString();
-const updateRepo = process.env.WINDOWS_MINI_HUB_UPDATE_REPO ?? "YOUR_GITHUB_USERNAME/windows-mini-hub";
+const updateRepo = process.env.WINDOWS_MINI_HUB_UPDATE_REPO ?? "bdfyff/windows-mini-hub";
 
 function createWindow() {
   mainWindow = new BrowserWindow({
