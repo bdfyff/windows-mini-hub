@@ -1,5 +1,5 @@
 import { app, BrowserWindow, dialog, ipcMain } from "electron";
-import { autoUpdater } from "electron-updater";
+import updater from "electron-updater";
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -29,6 +29,7 @@ import {
 } from "./installers";
 import { applySelectedTweaks, tweaks } from "./tweaks";
 
+const { autoUpdater } = updater;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
