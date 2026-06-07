@@ -617,146 +617,178 @@ export const tweaks: TweakDefinition[] = [
     "System",
     "Disabling or removing security protection can make the PC unsafe."
   ),
-  blocked(
-    "set-diagnostic-data-minimum",
-    "Set diagnostic data to minimum",
-    "Configures Windows diagnostic data levels.",
-    "Privacy",
-    "This is a machine-level policy and should be implemented with a clear admin-only Windows edition check."
-  ),
-  blocked(
-    "disable-error-reporting",
-    "Disable Windows Error Reporting",
-    "Configures Windows Error Reporting.",
-    "Privacy",
-    "Disabling WER can hide useful crash diagnostics and requires service/task handling."
-  ),
-  blocked(
-    "disable-feedback-frequency",
-    "Disable feedback frequency prompts",
-    "Configures Windows feedback prompt controls.",
-    "Privacy",
-    "This should be bundled into a reversible privacy preset with state detection."
-  ),
-  blocked(
-    "disable-activity-history",
-    "Disable activity history and timeline",
-    "Configures activity history and timeline privacy.",
-    "Privacy",
-    "Activity history differs across Windows builds; add detection before applying."
-  ),
-  blocked(
-    "enable-storage-sense",
-    "Enable Storage Sense",
-    "Configures Storage Sense cleanup behavior.",
-    "System",
-    "Storage cleanup needs visible retention settings so user files are not removed unexpectedly."
-  ),
-  blocked(
-    "disable-hibernation",
-    "Disable hibernation",
-    "Configures Windows hibernation.",
-    "System",
-    "This can disable Fast Startup and affects laptops; it should be an explicit power setting."
-  ),
-  blocked(
-    "configure-delivery-optimization",
-    "Configure Delivery Optimization",
-    "Configures Windows Update Delivery Optimization.",
-    "System",
-    "Network/update sharing policy should be shown as a dedicated Windows Update setting."
-  ),
-  blocked(
-    "configure-active-hours",
-    "Configure Windows Update active hours",
-    "Configures Windows Update active hours.",
-    "System",
-    "This needs time inputs instead of a one-click tweak."
-  ),
-  blocked(
-    "configure-power-plan",
-    "Configure power plan",
-    "Switches Windows power plans.",
-    "System",
-    "Power plans are hardware and laptop/desktop dependent."
-  ),
-  blocked(
-    "disable-network-adapter-power-save",
-    "Disable network adapter power saving",
-    "Configures network adapter power saving.",
-    "Network",
-    "This must enumerate adapters and show exactly what will change."
-  ),
-  blocked(
-    "create-windows-cleanup-task",
-    "Create Windows Cleanup scheduled task",
-    "Creates scheduled cleanup tasks with notifications.",
-    "Cleaning",
-    "Scheduled cleanup needs a dedicated UI for frequency, scope, and undo."
-  ),
-  blocked(
-    "cleanup-softwaredistribution-task",
-    "Create SoftwareDistribution cleanup task",
-    "Schedules Windows Update cache cleanup.",
-    "Cleaning",
-    "Windows Update cache cleanup should wait for update state and be run as a dedicated maintenance action."
-  ),
-  blocked(
-    "cleanup-temp-task",
-    "Create TEMP cleanup task",
-    "Schedules TEMP folder cleanup.",
-    "Cleaning",
-    "Scheduled deletion should expose retention rules and affected folders first."
-  ),
-  blocked(
-    "enable-defender-network-protection",
-    "Enable Defender network protection",
-    "Configures Microsoft Defender hardening.",
-    "Security",
-    "Security hardening is useful, but needs admin checks, Defender health checks, and a dedicated security page."
-  ),
-  blocked(
-    "enable-defender-pua-detection",
-    "Enable Defender PUA detection",
-    "Enables potentially unwanted app blocking.",
-    "Security",
-    "This should be an admin-only security preset with clear compatibility notes."
-  ),
-  blocked(
-    "enable-defender-sandbox",
-    "Enable Defender sandbox",
-    "Configures Defender sandboxing.",
-    "Security",
-    "This is security-positive, but should be applied only after Defender health/admin checks."
-  ),
-  blocked(
-    "enable-lsa-protection",
-    "Enable LSA protection",
-    "Enables Local Security Authority protection.",
-    "Security",
-    "LSA protection may require reboot and can trigger compatibility issues with credential tools."
-  ),
-  blocked(
-    "enable-powershell-logging",
-    "Enable PowerShell logging",
-    "Configures PowerShell module and script logging.",
-    "Security",
-    "Logging policy belongs in an admin security/audit preset with storage and privacy notes."
-  ),
-  blocked(
-    "enable-windows-sandbox",
-    "Enable Windows Sandbox",
-    "Enables Windows Sandbox.",
-    "Security",
-    "This requires Windows feature management, edition checks, virtualization checks, and reboot handling."
-  ),
-  blocked(
-    "remove-windows-ai-recall",
-    "Remove Windows AI / Recall surfaces",
-    "Controls Windows AI and Recall surfaces.",
-    "Privacy",
-    "Windows AI features vary by build and hardware; this needs build-specific detection before automation."
-  ),
+  {
+    id: "set-diagnostic-data-minimum",
+    name: "Set diagnostic data to minimum",
+    description: "Configures Windows diagnostic data levels to the minimum available level.",
+    category: "Privacy",
+    group: "Advanced",
+    risk: "high",
+    requiresAdmin: true,
+    command: `${setDword("HKLM:\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\DataCollection", "AllowTelemetry", 1)}; ${setDword("HKLM:\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\DataCollection", "MaxTelemetryAllowed", 1)}; ${setDword("HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Diagnostics\\DiagTrack", "ShowedToastAtLevel", 1)}`
+  },
+  {
+    id: "disable-error-reporting",
+    name: "Disable Windows Error Reporting",
+    description: "Disables Windows Error Reporting for the current user and machine policy.",
+    category: "Privacy",
+    group: "Advanced",
+    risk: "high",
+    requiresAdmin: true,
+    command: `${setDword("HKCU:\\Software\\Microsoft\\Windows\\Windows Error Reporting", "Disabled", 1)}; ${setDword("HKLM:\\Software\\Microsoft\\Windows\\Windows Error Reporting", "Disabled", 1)}`
+  },
+  {
+    id: "disable-feedback-frequency",
+    name: "Disable feedback frequency prompts",
+    description: "Stops Windows from asking for feedback periodically.",
+    category: "Privacy",
+    group: "Advanced",
+    risk: "high",
+    command: `${setDword("HKCU:\\Software\\Microsoft\\Siuf\\Rules", "NumberOfSIUFInPeriod", 0)}; Remove-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Siuf\\Rules' -Name 'PeriodInNanoSeconds' -ErrorAction SilentlyContinue`
+  },
+  {
+    id: "disable-activity-history",
+    name: "Disable activity history and timeline",
+    description: "Disables activity feed publishing and upload policies.",
+    category: "Privacy",
+    group: "Advanced",
+    risk: "high",
+    requiresAdmin: true,
+    command: `${setDword("HKLM:\\Software\\Policies\\Microsoft\\Windows\\System", "EnableActivityFeed", 0)}; ${setDword("HKLM:\\Software\\Policies\\Microsoft\\Windows\\System", "PublishUserActivities", 0)}; ${setDword("HKLM:\\Software\\Policies\\Microsoft\\Windows\\System", "UploadUserActivities", 0)}`
+  },
+  {
+    id: "enable-storage-sense",
+    name: "Enable Storage Sense",
+    description: "Enables Storage Sense without immediately deleting user files.",
+    category: "System",
+    group: "Advanced",
+    risk: "high",
+    command: setDword("HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\StorageSense\\Parameters\\StoragePolicy", "01", 1)
+  },
+  {
+    id: "disable-hibernation",
+    name: "Disable hibernation",
+    description: "Turns off hibernation and removes hiberfil.sys.",
+    category: "System",
+    group: "Advanced",
+    risk: "high",
+    requiresAdmin: true,
+    requiresRestart: true,
+    command: "powercfg.exe /hibernate off"
+  },
+  {
+    id: "configure-delivery-optimization",
+    name: "Limit Delivery Optimization to LAN",
+    description: "Prevents Delivery Optimization from sharing update data with internet peers.",
+    category: "System",
+    group: "Advanced",
+    risk: "high",
+    requiresAdmin: true,
+    command: setDword("HKLM:\\Software\\Microsoft\\Windows\\CurrentVersion\\DeliveryOptimization\\Config", "DODownloadMode", 1)
+  },
+  {
+    id: "configure-active-hours",
+    name: "Set Windows Update active hours",
+    description: "Sets active hours from 10:00 to 23:00 to reduce surprise restarts.",
+    category: "System",
+    group: "Advanced",
+    risk: "high",
+    requiresAdmin: true,
+    command: `${setDword("HKLM:\\Software\\Microsoft\\WindowsUpdate\\UX\\Settings", "IsActiveHoursEnabled", 1)}; ${setDword("HKLM:\\Software\\Microsoft\\WindowsUpdate\\UX\\Settings", "ActiveHoursStart", 10)}; ${setDword("HKLM:\\Software\\Microsoft\\WindowsUpdate\\UX\\Settings", "ActiveHoursEnd", 23)}`
+  },
+  {
+    id: "configure-power-plan",
+    name: "Use High Performance power plan",
+    description: "Switches Windows to the High Performance power scheme when available.",
+    category: "System",
+    group: "Advanced",
+    risk: "high",
+    command: "powercfg.exe /setactive SCHEME_MIN"
+  },
+  {
+    id: "disable-network-adapter-power-save",
+    name: "Disable network adapter power saving",
+    description: "Disables power-saving mode for physical network adapters when supported.",
+    category: "Network",
+    group: "Advanced",
+    risk: "high",
+    requiresAdmin: true,
+    command: "Get-NetAdapter -Physical -ErrorAction SilentlyContinue | ForEach-Object { Set-NetAdapterPowerManagement -Name $_.Name -AllowComputerToTurnOffDevice Disabled -ErrorAction SilentlyContinue }"
+  },
+  {
+    id: "enable-defender-network-protection",
+    name: "Enable Defender network protection",
+    description: "Enables Microsoft Defender network protection.",
+    category: "Security",
+    group: "Advanced",
+    risk: "high",
+    requiresAdmin: true,
+    command: "Set-MpPreference -EnableNetworkProtection Enabled"
+  },
+  {
+    id: "enable-defender-pua-detection",
+    name: "Enable Defender PUA detection",
+    description: "Enables potentially unwanted app blocking in Microsoft Defender.",
+    category: "Security",
+    group: "Advanced",
+    risk: "high",
+    requiresAdmin: true,
+    command: "Set-MpPreference -PUAProtection Enabled"
+  },
+  {
+    id: "enable-defender-sandbox",
+    name: "Enable Defender sandbox",
+    description: "Enables Microsoft Defender sandboxing.",
+    category: "Security",
+    group: "Advanced",
+    risk: "high",
+    requiresAdmin: true,
+    requiresRestart: true,
+    command: "[Environment]::SetEnvironmentVariable('MP_FORCE_USE_SANDBOX', '1', 'Machine')"
+  },
+  {
+    id: "enable-lsa-protection",
+    name: "Enable LSA protection",
+    description: "Enables Local Security Authority process protection without UEFI lock.",
+    category: "Security",
+    group: "Advanced",
+    risk: "high",
+    requiresAdmin: true,
+    requiresRestart: true,
+    command: setDword("HKLM:\\System\\CurrentControlSet\\Control\\Lsa", "RunAsPPL", 2)
+  },
+  {
+    id: "enable-powershell-logging",
+    name: "Enable PowerShell logging",
+    description: "Enables PowerShell module and script block logging policies.",
+    category: "Security",
+    group: "Advanced",
+    risk: "high",
+    requiresAdmin: true,
+    command: `${setDword("HKLM:\\Software\\Policies\\Microsoft\\Windows\\PowerShell\\ModuleLogging", "EnableModuleLogging", 1)}; ${setDword("HKLM:\\Software\\Policies\\Microsoft\\Windows\\PowerShell\\ScriptBlockLogging", "EnableScriptBlockLogging", 1)}`
+  },
+  {
+    id: "enable-windows-sandbox",
+    name: "Enable Windows Sandbox",
+    description: "Enables the Windows Sandbox optional feature where supported.",
+    category: "Security",
+    group: "Advanced",
+    risk: "high",
+    requiresAdmin: true,
+    requiresRestart: true,
+    command: "Enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM -NoRestart"
+  },
+  {
+    id: "remove-windows-ai-recall",
+    name: "Disable Windows AI / Recall surfaces",
+    description: "Applies policies to disable Windows Copilot, AI data analysis, and Recall-like surfaces where supported.",
+    category: "Privacy",
+    group: "Advanced",
+    risk: "high",
+    requiresAdmin: true,
+    requiresExplorerRestart: true,
+    command: `${setDword("HKCU:\\Software\\Policies\\Microsoft\\Windows\\WindowsCopilot", "TurnOffWindowsCopilot", 1)}; ${setDword("HKLM:\\Software\\Policies\\Microsoft\\Windows\\WindowsCopilot", "TurnOffWindowsCopilot", 1)}; ${setDword("HKLM:\\Software\\Policies\\Microsoft\\Windows\\WindowsAI", "DisableAIDataAnalysis", 1)}`
+  },
   blocked(
     "disable-smartscreen",
     "Disable SmartScreen",

@@ -152,6 +152,7 @@ export type TweakDefinition = {
   group?: "Safe" | "Balanced" | "Advanced";
   risk?: "low" | "medium" | "high";
   category?: string;
+  requiresAdmin?: boolean;
   requiresRestart?: boolean;
   requiresExplorerRestart?: boolean;
   blocked?: boolean;

@@ -180,6 +180,7 @@ export function TweaksPage({ isRunning, proMode }: TweaksPageProps) {
                                   Explorer
                                 </Badge>
                               )}
+                              {tweak.requiresAdmin && <Badge tone="warning">admin</Badge>}
                               {tweak.requiresRestart && <Badge tone="muted">restart</Badge>}
                               {checked && (
                                 <Badge tone="default">
