@@ -593,7 +593,7 @@ export const tweaks: TweakDefinition[] = [
   {
     id: "enable-utc-hardware-clock-note",
     name: "Enable UTC hardware clock",
-    description: "Optimizer includes global UTC time support. Mini Hub keeps this manual because dual-boot/time setups vary.",
+    description: "Keeps this manual because dual-boot and system time setups vary.",
     category: "System",
     group: "Advanced",
     risk: "high",
@@ -613,273 +613,273 @@ export const tweaks: TweakDefinition[] = [
   blocked(
     "remove-defender",
     "Remove or disable Microsoft Defender",
-    "WinTweaker advertises Defender removal, but Mini Hub does not automate security removal.",
+    "Security protection removal is available for review only and is not automated.",
     "System",
     "Disabling or removing security protection can make the PC unsafe."
   ),
   blocked(
     "set-diagnostic-data-minimum",
     "Set diagnostic data to minimum",
-    "SophiApp can configure diagnostic data levels.",
+    "Configures Windows diagnostic data levels.",
     "Privacy",
     "This is a machine-level policy and should be implemented with a clear admin-only Windows edition check."
   ),
   blocked(
     "disable-error-reporting",
     "Disable Windows Error Reporting",
-    "SophiApp can configure error reporting.",
+    "Configures Windows Error Reporting.",
     "Privacy",
     "Disabling WER can hide useful crash diagnostics and requires service/task handling."
   ),
   blocked(
     "disable-feedback-frequency",
     "Disable feedback frequency prompts",
-    "SophiApp includes feedback prompt controls.",
+    "Configures Windows feedback prompt controls.",
     "Privacy",
     "This should be bundled into a reversible privacy preset with state detection."
   ),
   blocked(
     "disable-activity-history",
     "Disable activity history and timeline",
-    "SophiApp includes privacy history controls.",
+    "Configures activity history and timeline privacy.",
     "Privacy",
     "Activity history differs across Windows builds; add detection before applying."
   ),
   blocked(
     "enable-storage-sense",
     "Enable Storage Sense",
-    "SophiApp can configure Storage Sense.",
+    "Configures Storage Sense cleanup behavior.",
     "System",
     "Storage cleanup needs visible retention settings so user files are not removed unexpectedly."
   ),
   blocked(
     "disable-hibernation",
     "Disable hibernation",
-    "SophiApp can configure hibernation.",
+    "Configures Windows hibernation.",
     "System",
     "This can disable Fast Startup and affects laptops; it should be an explicit power setting."
   ),
   blocked(
     "configure-delivery-optimization",
     "Configure Delivery Optimization",
-    "SophiApp can configure Windows Update Delivery Optimization.",
+    "Configures Windows Update Delivery Optimization.",
     "System",
     "Network/update sharing policy should be shown as a dedicated Windows Update setting."
   ),
   blocked(
     "configure-active-hours",
     "Configure Windows Update active hours",
-    "SophiApp can configure active hours.",
+    "Configures Windows Update active hours.",
     "System",
     "This needs time inputs instead of a one-click tweak."
   ),
   blocked(
     "configure-power-plan",
     "Configure power plan",
-    "SophiApp can switch power plans.",
+    "Switches Windows power plans.",
     "System",
     "Power plans are hardware and laptop/desktop dependent."
   ),
   blocked(
     "disable-network-adapter-power-save",
     "Disable network adapter power saving",
-    "SophiApp can configure network adapter power saving.",
+    "Configures network adapter power saving.",
     "Network",
     "This must enumerate adapters and show exactly what will change."
   ),
   blocked(
     "create-windows-cleanup-task",
     "Create Windows Cleanup scheduled task",
-    "SophiApp creates scheduled cleanup tasks with notifications.",
+    "Creates scheduled cleanup tasks with notifications.",
     "Cleaning",
     "Scheduled cleanup needs a dedicated UI for frequency, scope, and undo."
   ),
   blocked(
     "cleanup-softwaredistribution-task",
     "Create SoftwareDistribution cleanup task",
-    "SophiApp can schedule Windows Update cache cleanup.",
+    "Schedules Windows Update cache cleanup.",
     "Cleaning",
     "Windows Update cache cleanup should wait for update state and be run as a dedicated maintenance action."
   ),
   blocked(
     "cleanup-temp-task",
     "Create TEMP cleanup task",
-    "SophiApp can schedule TEMP folder cleanup.",
+    "Schedules TEMP folder cleanup.",
     "Cleaning",
     "Scheduled deletion should expose retention rules and affected folders first."
   ),
   blocked(
     "enable-defender-network-protection",
     "Enable Defender network protection",
-    "SophiApp can configure Microsoft Defender hardening.",
+    "Configures Microsoft Defender hardening.",
     "Security",
     "Security hardening is useful, but needs admin checks, Defender health checks, and a dedicated security page."
   ),
   blocked(
     "enable-defender-pua-detection",
     "Enable Defender PUA detection",
-    "SophiApp can enable potentially unwanted app blocking.",
+    "Enables potentially unwanted app blocking.",
     "Security",
     "This should be an admin-only security preset with clear compatibility notes."
   ),
   blocked(
     "enable-defender-sandbox",
     "Enable Defender sandbox",
-    "SophiApp can configure Defender sandboxing.",
+    "Configures Defender sandboxing.",
     "Security",
     "This is security-positive, but should be applied only after Defender health/admin checks."
   ),
   blocked(
     "enable-lsa-protection",
     "Enable LSA protection",
-    "SophiApp can enable Local Security Authority protection.",
+    "Enables Local Security Authority protection.",
     "Security",
     "LSA protection may require reboot and can trigger compatibility issues with credential tools."
   ),
   blocked(
     "enable-powershell-logging",
     "Enable PowerShell logging",
-    "SophiApp can configure PowerShell module/script logging.",
+    "Configures PowerShell module and script logging.",
     "Security",
     "Logging policy belongs in an admin security/audit preset with storage and privacy notes."
   ),
   blocked(
     "enable-windows-sandbox",
     "Enable Windows Sandbox",
-    "SophiApp can enable Windows Sandbox.",
+    "Enables Windows Sandbox.",
     "Security",
     "This requires Windows feature management, edition checks, virtualization checks, and reboot handling."
   ),
   blocked(
     "remove-windows-ai-recall",
     "Remove Windows AI / Recall surfaces",
-    "SophiApp includes Windows AI removal controls.",
+    "Controls Windows AI and Recall surfaces.",
     "Privacy",
     "Windows AI features vary by build and hardware; this needs build-specific detection before automation."
   ),
   blocked(
     "disable-smartscreen",
     "Disable SmartScreen",
-    "WinTweaker advertises SmartScreen removal, but Mini Hub keeps it blocked.",
+    "SmartScreen removal is available for review only and is not automated.",
     "System",
     "SmartScreen protects users from unknown downloads and should not be disabled by a setup hub."
   ),
   blocked(
     "disable-uac",
     "Disable UAC",
-    "WinTweaker advertises UAC changes, but Mini Hub does not automate this.",
+    "UAC removal is available for review only and is not automated.",
     "System",
     "Disabling UAC weakens Windows elevation boundaries."
   ),
   blocked(
     "stop-windows-updates",
     "Stop automatic Windows Updates",
-    "Optimizer can stop automatic Windows updates. Mini Hub keeps this blocked.",
+    "Stops automatic Windows updates.",
     "System",
     "Blocking updates can leave the PC without security patches and can break Microsoft Store or driver delivery."
   ),
   blocked(
     "disable-telemetry-services",
     "Disable telemetry services",
-    "Optimizer includes telemetry service toggles. Mini Hub does not bulk-disable Windows services.",
+    "Disables telemetry-related Windows services.",
     "Services",
     "Service-level changes can break diagnostics, networking, Microsoft Store, updates, battery reports, or app usage tracking."
   ),
   blocked(
     "disable-cortana-system",
     "Disable Cortana system-wide",
-    "Optimizer includes Cortana controls. Mini Hub only applies local search/web suggestion tweaks.",
+    "Disables Cortana system-wide.",
     "Confidentiality",
     "System-wide assistant/search policy changes vary by Windows edition and can break search features."
   ),
   blocked(
     "disable-hpet",
     "Disable HPET",
-    "Optimizer includes HPET control for advanced gaming tweaks.",
+    "Configures HPET for advanced gaming timer tuning.",
     "Optimization",
     "Timer tweaks are hardware-dependent and can hurt latency or stability on modern systems."
   ),
   blocked(
     "uninstall-onedrive",
     "Uninstall OneDrive",
-    "Optimizer warns that OneDrive removal can delete synced Desktop/Documents data.",
+    "Removes OneDrive integration and related components.",
     "Applications",
     "Removing OneDrive is unsafe after Microsoft account sync is configured."
   ),
   blocked(
     "uninstall-uwp-apps",
     "Bulk uninstall UWP apps",
-    "Optimizer includes a UWP uninstaller. Mini Hub keeps bulk removal manual.",
+    "Bulk-removes selected UWP apps.",
     "Applications",
     "Bulk UWP removal can remove dependencies, Store components, or apps the user still needs."
   ),
   blocked(
     "edit-hosts-file",
     "Edit or lock HOSTS file",
-    "Optimizer includes HOSTS editing and adblock entries.",
+    "Edits or locks the HOSTS file.",
     "Network",
     "HOSTS changes can silently break websites, launchers, updates, or authentication."
   ),
   blocked(
     "change-dns-server",
     "Change DNS server",
-    "Optimizer can switch DNS providers. Mini Hub keeps this as a future explicit network tool.",
+    "Changes DNS providers for selected network adapters.",
     "Network",
     "DNS changes should be visible per adapter and reversible, not hidden inside a general tweak preset."
   ),
   blocked(
     "remove-startup-items",
     "Remove startup items",
-    "Optimizer includes startup item management. Mini Hub does not delete startup entries as a tweak.",
+    "Removes startup entries.",
     "Autorun",
     "Startup cleanup needs a review UI with backup/restore, otherwise it can remove needed tray tools or drivers."
   ),
   blocked(
     "terminate-file-locks",
     "Terminate file lock handles",
-    "Optimizer can identify and terminate file lock handles.",
+    "Identifies and terminates file lock handles.",
     "System",
     "Force-closing handles can corrupt active files or crash applications."
   ),
   blocked(
     "remove-microsoft-store",
     "Remove Microsoft Store",
-    "WinTweaker advertises Store removal, but Mini Hub keeps it manual.",
+    "Removes Microsoft Store.",
     "Applications",
     "Removing Store can break app updates, dependencies, and WinGet Store installs."
   ),
   blocked(
     "deep-service-optimizer",
     "Automatic service optimizer",
-    "WinTweaker has a service configurator. Mini Hub does not bulk-disable services automatically.",
+    "Bulk-configures Windows services.",
     "Services",
     "Service presets are hardware and workflow dependent and can break updates, networking, printing, gaming, or login components."
   ),
   blocked(
     "deep-task-scheduler-cleanup",
     "Deep scheduled task cleanup",
-    "WinTweaker advertises scheduler cleanup. Mini Hub keeps this blocked.",
+    "Bulk-cleans scheduled tasks.",
     "Confidentiality",
     "Bulk task removal can break Windows maintenance, updates, telemetry controls, and diagnostics."
   ),
   blocked(
     "deep-cache-ai-clean",
     "Deep cache and junk cleanup",
-    "WinTweaker advertises deep cache cleanup. Mini Hub does not delete broad system files automatically.",
+    "Runs deep system cache and junk cleanup.",
     "Cleaning",
     "Aggressive cleanup can remove useful caches, logs, installers, restore data, or app state."
   ),
   blocked(
     "duplicate-file-hardlinking",
     "Duplicate replacement with hard links",
-    "WinTweaker advertises duplicate replacement using hard links.",
+    "Replaces duplicate files using hard links.",
     "Optimization",
     "Automatic duplicate replacement can corrupt user workflows if file identity matters."
   ),
   blocked(
     "autorun-elevated-items",
     "Add elevated autorun items",
-    "WinTweaker advertises elevated autorun management.",
+    "Adds elevated autorun entries.",
     "Autorun",
     "Creating elevated autorun entries is too powerful for a simple setup preset."
   )

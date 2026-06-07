@@ -59,6 +59,7 @@ export default function App() {
   const [compactMode, setCompactMode] = useState(() => localStorage.getItem("miniHub:compact") !== "false");
   const [animations, setAnimations] = useState(() => localStorage.getItem("miniHub:animations") !== "false");
   const [skipInstalled, setSkipInstalled] = useState(() => localStorage.getItem("miniHub:skipInstalled") !== "false");
+  const [proMode, setProMode] = useState(() => localStorage.getItem("miniHub:proMode") === "true");
 
   useEffect(() => {
     void window.miniHub.getStatus().then(setStatus);
@@ -154,6 +155,10 @@ export default function App() {
     document.documentElement.classList.toggle("no-motion", !animations);
   }, [animations]);
 
+  useEffect(() => {
+    localStorage.setItem("miniHub:proMode", String(proMode));
+  }, [proMode]);
+
   const errorCount = logs.filter((log) => log.level === "error").length + queue.filter((item) => item.status === "error").length;
   const queueFinished =
     queue.length > 0 && queue.every((item) => ["success", "error", "skipped", "cancelled"].includes(item.status)) && status !== "running";
@@ -210,7 +215,7 @@ export default function App() {
     }
 
     if (page === "tweaks") {
-      return <TweaksPage isRunning={status === "running"} />;
+      return <TweaksPage isRunning={status === "running"} proMode={proMode} />;
     }
 
     if (page === "settings") {
@@ -228,9 +233,11 @@ export default function App() {
           setAnimations={setAnimations}
           setCompactMode={setCompactMode}
           setDefaultPage={setDefaultPage}
+          setProMode={setProMode}
           setSkipInstalled={setSkipInstalled}
           setTheme={setTheme}
           defaultPage={defaultPage}
+          proMode={proMode}
           skipInstalled={skipInstalled}
           theme={theme}
         />
@@ -255,6 +262,7 @@ export default function App() {
     lastRunAt,
     logs,
     page,
+    proMode,
     queue,
     selectedApps,
     skipInstalled,

@@ -9,6 +9,7 @@ import { tweaks } from "@/data/tweaks";
 
 type TweaksPageProps = {
   isRunning: boolean;
+  proMode: boolean;
 };
 
 const groupMeta = {
@@ -35,7 +36,7 @@ const riskTone = {
   high: "error"
 } as const;
 
-export function TweaksPage({ isRunning }: TweaksPageProps) {
+export function TweaksPage({ isRunning, proMode }: TweaksPageProps) {
   const [selected, setSelected] = useState<string[]>(() => {
     try {
       const raw = localStorage.getItem("miniHub:selectedTweaks");
@@ -63,9 +64,9 @@ export function TweaksPage({ isRunning }: TweaksPageProps) {
   const grouped = useMemo(() => {
     return (["Safe", "Balanced", "Advanced"] as const).map((group) => ({
       group,
-      items: tweaks.filter((tweak) => (tweak.group ?? "Safe") === group)
+      items: tweaks.filter((tweak) => (tweak.group ?? "Safe") === group && (proMode || !tweak.blocked))
     }));
-  }, []);
+  }, [proMode]);
 
   const toggleTweak = (id: string) => {
     const tweak = tweaks.find((item) => item.id === id);
@@ -106,6 +107,23 @@ export function TweaksPage({ isRunning }: TweaksPageProps) {
           <Badge tone="muted">{applyableSelected.length}</Badge>
         </Button>
       </div>
+
+      <Card className={proMode ? "border-amber-300/20 bg-amber-300/[0.06]" : "border-white/10 bg-white/[0.035]"}>
+        <CardContent className="flex flex-wrap items-center justify-between gap-3 p-4">
+          <div className="flex items-start gap-3">
+            {proMode ? <AlertTriangle className="mt-0.5 h-4 w-4 text-amber-200" /> : <LockKeyhole className="mt-0.5 h-4 w-4 text-muted-foreground" />}
+            <div>
+              <div className="text-sm font-medium">{proMode ? "Pro mode is enabled" : "Pro mode is disabled"}</div>
+              <div className="mt-1 text-xs leading-5 text-muted-foreground">
+                {proMode
+                  ? "High-impact tweaks are visible for review. Security-removal actions stay locked and are not executed automatically."
+                  : "Only safe and balanced tweaks are shown. Enable Pro mode in Settings to review high-impact manual items."}
+              </div>
+            </div>
+          </div>
+          <Badge tone={proMode ? "warning" : "muted"}>{proMode ? "pro review" : "safe view"}</Badge>
+        </CardContent>
+      </Card>
 
       <div className="grid gap-4">
         {grouped.map(({ group, items }) => {

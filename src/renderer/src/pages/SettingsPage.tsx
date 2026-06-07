@@ -21,8 +21,10 @@ type SettingsPageProps = {
   setAnimations: (enabled: boolean) => void;
   setCompactMode: (enabled: boolean) => void;
   setDefaultPage: (page: "dashboard" | "apps" | "tweaks" | "logs" | "sources" | "settings") => void;
+  setProMode: (enabled: boolean) => void;
   setSkipInstalled: (enabled: boolean) => void;
   setTheme: (theme: "dark" | "light" | "system") => void;
+  proMode: boolean;
   skipInstalled: boolean;
   theme: "dark" | "light" | "system";
 };
@@ -47,8 +49,10 @@ export function SettingsPage({
   setAnimations,
   setCompactMode,
   setDefaultPage,
+  setProMode,
   setSkipInstalled,
   setTheme,
+  proMode,
   skipInstalled,
   theme
 }: SettingsPageProps) {
@@ -143,6 +147,16 @@ export function SettingsPage({
                 <span className="mt-1 block text-xs text-muted-foreground">Use soft transitions and hover motion.</span>
               </span>
               <Checkbox checked={animations} onChange={(event) => setAnimations(event.currentTarget.checked)} />
+            </label>
+
+            <label className="flex items-center justify-between gap-4 rounded-md border border-amber-300/20 bg-amber-300/[0.08] p-3">
+              <span>
+                <span className="block text-sm font-medium text-amber-100">Pro mode</span>
+                <span className="mt-1 block text-xs leading-5 text-amber-100/75">
+                  Shows high-impact and manual-review tweaks. Pro mode does not bypass safety locks for security-removal actions.
+                </span>
+              </span>
+              <Checkbox checked={proMode} onChange={(event) => setProMode(event.currentTarget.checked)} />
             </label>
 
             <label className="flex items-center justify-between gap-4 rounded-md border border-white/10 bg-white/[0.035] p-3">
