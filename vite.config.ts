@@ -3,6 +3,7 @@ import { defineConfig } from "vite";
 import path from "node:path";
 
 export default defineConfig({
+  base: "./",
   root: "src/renderer",
   plugins: [react()],
   resolve: {

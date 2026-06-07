@@ -206,7 +206,7 @@ export function SettingsPage({
               </div>
               <div className="rounded-md border border-white/10 bg-white/[0.035] p-3">
                 <div className="text-xs uppercase tracking-[0.14em] text-muted-foreground">Changelog</div>
-                <div className="mt-1 text-xs leading-5 text-muted-foreground">0.2.2: hotfix for packaged auto-updater startup.</div>
+                <div className="mt-1 text-xs leading-5 text-muted-foreground">0.2.3: hotfix for packaged renderer asset paths.</div>
               </div>
             </div>
             <div className="mb-4 rounded-md border border-white/10 bg-white/[0.035] p-3">
@@ -299,3 +299,4 @@ export function SettingsPage({
     </div>
   );
 }
+
