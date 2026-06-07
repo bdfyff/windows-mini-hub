@@ -13,6 +13,7 @@
   "scripts": {
     "dev": "concurrently -k \"vite --host 127.0.0.1\" \"wait-on tcp:5173 && cross-env VITE_DEV_SERVER_URL=http://127.0.0.1:5173 electron .\"",
     "build": "tsc --noEmit && vite build && vite build --config vite.main.config.ts && vite build --config vite.preload.config.ts",
+    "audit:tweaks": "node scripts/audit-tweaks.cjs",
     "preview": "vite preview",
     "pack": "npm run build && electron-builder --dir",
     "dist": "npm run build && electron-builder",

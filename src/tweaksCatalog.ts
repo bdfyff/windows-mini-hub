@@ -116,7 +116,7 @@ export const tweaks: TweakDefinition[] = [
     group: "Balanced",
     risk: "medium",
     command:
-      "New-Item -Path 'HKCU:\\Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\\InprocServer32' -Force | Out-Null; Set-ItemProperty -Path 'HKCU:\\Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\\InprocServer32' -Name '(default)' -Value ''",
+      "New-Item -Path 'HKCU:\\Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\\InprocServer32' -Force | Out-Null; Set-Item -Path 'HKCU:\\Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\\InprocServer32' -Value ''",
     requiresExplorerRestart: true
   },
   {
@@ -126,7 +126,7 @@ export const tweaks: TweakDefinition[] = [
     category: "Confidentiality",
     group: "Balanced",
     risk: "medium",
-    command: `${setDword(search, "BingSearchEnabled", 0)}; ${setDword(search, "CortanaConsent", 0)}`
+    command: `${setDword("HKCU:\\Software\\Policies\\Microsoft\\Windows\\Explorer", "DisableSearchBoxSuggestions", 1)}; ${setDword(search, "BingSearchEnabled", 0)}; ${setDword(search, "CortanaConsent", 0)}`
   },
   {
     id: "disable-search-highlights",
@@ -135,7 +135,7 @@ export const tweaks: TweakDefinition[] = [
     category: "Confidentiality",
     group: "Balanced",
     risk: "medium",
-    command: setDword(search, "SearchboxTaskbarMode", 1)
+    command: setDword("HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\SearchSettings", "IsDynamicSearchBoxEnabled", 0)
   },
   {
     id: "disable-advertising-id",
@@ -442,7 +442,7 @@ export const tweaks: TweakDefinition[] = [
     category: "Start Menu",
     group: "Safe",
     risk: "low",
-    command: setDword(explorerAdvanced, "Start_TrackProgs", 0),
+    command: setDword("HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Start", "ShowRecentList", 0),
     requiresExplorerRestart: true
   },
   {
@@ -452,7 +452,7 @@ export const tweaks: TweakDefinition[] = [
     category: "Start Menu",
     group: "Balanced",
     risk: "medium",
-    command: setDword(explorerAdvanced, "Start_TrackDocs", 0),
+    command: setDword("HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Start", "ShowFrequentList", 0),
     requiresExplorerRestart: true
   },
   {
@@ -462,7 +462,7 @@ export const tweaks: TweakDefinition[] = [
     category: "Start Menu",
     group: "Balanced",
     risk: "medium",
-    command: setDword(explorerAdvanced, "Start_IrisRecommendations", 0),
+    command: `${setDword(explorerAdvanced, "Start_IrisRecommendations", 0)}; ${setDword(explorerAdvanced, "Start_TrackDocs", 0)}`,
     requiresExplorerRestart: true
   },
   {
