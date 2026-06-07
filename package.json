@@ -1,6 +1,6 @@
 {
   "name": "windows-mini-hub",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Desktop setup hub for fresh Windows installs.",
   "author": "Windows Mini Hub",
   "repository": {
@@ -51,7 +51,8 @@
     "publish": {
       "provider": "github",
       "owner": "bdfyff",
-      "repo": "windows-mini-hub"
+      "repo": "windows-mini-hub",
+      "releaseType": "release"
     }
   },
   "dependencies": {
