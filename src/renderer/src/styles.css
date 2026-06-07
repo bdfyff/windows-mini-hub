@@ -1,0 +1,266 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222 47% 7%;
+    --foreground: 210 40% 98%;
+    --card: 222 35% 10%;
+    --card-foreground: 210 40% 98%;
+    --muted: 217 28% 16%;
+    --muted-foreground: 215 18% 69%;
+    --border: 217 24% 19%;
+    --input: 217 24% 19%;
+    --ring: 189 94% 57%;
+    --primary: 189 94% 57%;
+    --primary-foreground: 222 47% 7%;
+    --secondary: 217 28% 16%;
+    --secondary-foreground: 210 40% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 40% 98%;
+    --radius: 0.5rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply min-h-screen overflow-hidden bg-background text-foreground antialiased;
+    color-scheme: dark;
+    background:
+      radial-gradient(circle at 14% -10%, rgba(34, 211, 238, 0.18), transparent 34rem),
+      radial-gradient(circle at 86% 8%, rgba(139, 92, 246, 0.16), transparent 30rem),
+      radial-gradient(circle at 50% 110%, rgba(59, 130, 246, 0.11), transparent 34rem),
+      linear-gradient(135deg, #050b17 0%, #09111f 44%, #0b1020 100%);
+  }
+
+  html.light {
+    --background: 210 42% 96%;
+    --foreground: 222 47% 10%;
+    --card: 210 40% 99%;
+    --card-foreground: 222 47% 11%;
+    --muted: 214 36% 92%;
+    --muted-foreground: 215 20% 37%;
+    --border: 214 30% 82%;
+    --input: 214 30% 82%;
+    --ring: 190 95% 39%;
+    --primary: 190 95% 39%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 214 36% 92%;
+    --secondary-foreground: 222 47% 11%;
+  }
+
+  html.light body {
+    color-scheme: light;
+    background:
+      radial-gradient(circle at 18% -10%, rgba(14, 165, 233, 0.18), transparent 34rem),
+      radial-gradient(circle at 86% 8%, rgba(124, 58, 237, 0.12), transparent 30rem),
+      linear-gradient(135deg, #e9f5ff 0%, #f8fafc 48%, #eef2ff 100%);
+  }
+
+  input,
+  button,
+  select,
+  textarea {
+    color-scheme: dark;
+  }
+
+  html.light input,
+  html.light button,
+  html.light select,
+  html.light textarea {
+    color-scheme: light;
+  }
+
+  html.light .app-drag {
+    background: rgba(245, 249, 255, 0.9) !important;
+    border-bottom-color: rgba(15, 23, 42, 0.12) !important;
+    color: rgb(15, 23, 42);
+  }
+
+  html.light aside {
+    background: rgba(238, 247, 255, 0.82) !important;
+    border-right-color: rgba(15, 23, 42, 0.12) !important;
+    box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.72);
+  }
+
+  html.light [class*="bg-black/"],
+  html.light [class*="bg-black\\/\["] {
+    background-color: rgba(248, 250, 252, 0.76) !important;
+  }
+
+  html.light [class*="bg-white/"],
+  html.light [class*="bg-white\\/\["] {
+    background-color: rgba(255, 255, 255, 0.62) !important;
+  }
+
+  html.light [class*="border-white/"],
+  html.light [class*="border-white\\/\["] {
+    border-color: rgba(15, 23, 42, 0.12) !important;
+  }
+
+  html.light [class*="shadow-black"] {
+    --tw-shadow-color: rgba(15, 23, 42, 0.12) !important;
+    --tw-shadow: var(--tw-shadow-colored) !important;
+  }
+
+  html.light [class*="text-white"],
+  html.light [class*="text-slate-100"],
+  html.light [class*="text-slate-200"],
+  html.light [class*="text-slate-300"] {
+    color: rgb(15, 23, 42) !important;
+  }
+
+  html.light [class*="text-cyan-50"],
+  html.light [class*="text-cyan-100"],
+  html.light [class*="text-cyan-200"],
+  html.light [class*="text-sky-100"] {
+    color: rgb(8, 105, 135) !important;
+  }
+
+  html.light [class*="text-emerald-100"],
+  html.light [class*="text-emerald-200"] {
+    color: rgb(4, 120, 87) !important;
+  }
+
+  html.light [class*="text-amber-100"],
+  html.light [class*="text-amber-200"] {
+    color: rgb(146, 64, 14) !important;
+  }
+
+  html.light [class*="text-red-100"],
+  html.light [class*="text-red-200"] {
+    color: rgb(185, 28, 28) !important;
+  }
+
+  html.light .rounded-lg,
+  html.light .rounded-md {
+    box-shadow-color: rgba(15, 23, 42, 0.08);
+  }
+
+  html.light * {
+    scrollbar-color: rgba(14, 116, 144, 0.42) rgba(226, 232, 240, 0.7);
+  }
+
+  html.light *::-webkit-scrollbar-track {
+    background: rgba(226, 232, 240, 0.7);
+  }
+
+  html.light *::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(14, 165, 233, 0.48), rgba(124, 58, 237, 0.36));
+    border-color: rgba(248, 250, 252, 0.82);
+  }
+
+  html.light input[type="checkbox"]:checked {
+    background-color: hsl(var(--primary)) !important;
+    border-color: hsl(var(--primary)) !important;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(125, 211, 252, 0.32) rgba(15, 23, 42, 0.22);
+  }
+
+  *::-webkit-scrollbar {
+    height: 10px;
+    width: 10px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.18);
+    border-radius: 999px;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(125, 211, 252, 0.42), rgba(167, 139, 250, 0.34));
+    border: 2px solid rgba(15, 23, 42, 0.55);
+    border-radius: 999px;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(125, 211, 252, 0.64), rgba(167, 139, 250, 0.54));
+  }
+
+  ::selection {
+    @apply bg-primary text-primary-foreground;
+  }
+}
+
+@layer utilities {
+  .app-drag {
+    -webkit-app-region: drag;
+  }
+
+  .app-no-drag {
+    -webkit-app-region: no-drag;
+  }
+
+  .no-motion *,
+  .no-motion *::before,
+  .no-motion *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .compact .compact\:p-3 {
+    padding: 0.75rem;
+  }
+
+  .animate-page-in {
+    animation: page-in 360ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  .animate-rise-in {
+    animation: rise-in 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  .animate-soft-pop {
+    animation: soft-pop 240ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  .transition-smooth {
+    transition-duration: 220ms;
+    transition-property: background-color, border-color, box-shadow, color, opacity, transform, filter;
+    transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+}
+
+@keyframes page-in {
+  from {
+    filter: blur(8px);
+    opacity: 0;
+    transform: translateY(10px) scale(0.992);
+  }
+  to {
+    filter: blur(0);
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes soft-pop {
+  0% {
+    transform: scale(0.97);
+  }
+  70% {
+    transform: scale(1.015);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

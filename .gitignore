@@ -1,0 +1,8 @@
+node_modules/
+dist/
+release/
+.vite/
+npm-debug.log*
+*.local
+Windows Mini Hub Data/
+portable-mode.json
