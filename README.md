@@ -137,8 +137,8 @@ Build outputs are written to `release/`.
 Expected Windows artifacts:
 
 ```text
-Windows Mini Hub-Portable-0.1.0-x64.exe
-Windows Mini Hub-Setup-0.1.0-x64.exe
+Windows Mini Hub-Portable-0.1.1-x64.exe
+Windows Mini Hub-Setup-0.1.1-x64.exe
 latest.yml
 ```
 
